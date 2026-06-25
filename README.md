@@ -3,7 +3,6 @@
 # Week 1: Design Patterns & Data Structures
 
 ## Design Patterns
-- **Factory Method Pattern**: Document factory implementation with PDF, Excel, and Word document types
 - **Singleton Pattern**: Logger implementation demonstrating singleton design pattern
 
 ## Data Structures & Algorithms
@@ -32,3 +31,6 @@ Book search functionality with library management
 
 ### Exercise 7: Financial Forecasting
 Financial forecasting algorithms
+
+### PLSQL
+Output.txt

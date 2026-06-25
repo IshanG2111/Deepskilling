@@ -1,0 +1,340 @@
+SQL> SELECT table_name
+  2  FROM user_tables;
+
+TABLE_NAME                                                                      
+------------------------------                                                  
+CUSTOMERS                                                                       
+
+SQL> SELECT table_name
+  2  FROM user_tables
+  3  ORDER BY table_name;
+
+TABLE_NAME                                                                      
+------------------------------                                                  
+CUSTOMERS                                                                       
+
+SQL> DESC Customers;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMERID                                NOT NULL NUMBER
+ NAME                                               VARCHAR2(100)
+ DOB                                                DATE
+ BALANCE                                            NUMBER
+ LASTMODIFIED                                       DATE
+
+SQL> SELECT * FROM Customers;
+
+CUSTOMERID                                                                      
+----------                                                                      
+NAME                                                                            
+--------------------------------------------------------------------------------
+DOB          BALANCE LASTMODIF                                                  
+--------- ---------- ---------                                                  
+         1                                                                      
+Ishan Ghosh                                                                     
+21-NOV-04        100 19-JUN-26                                                  
+                                                                                
+
+SQL> INSERT INTO Customers
+  2  VALUES (
+  3  2,
+  4  'John James',
+  5  TO_DATE('2005-12-15','YYYY-MM-DD'),
+  6  22000,
+  7  SYSDATE
+  8  );
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customers
+  2  VALUES (
+  3  3,
+  4  'Roy Bajaj',
+  5  TO_DATE('2004-10-21','YYYY-MM-DD'),
+  6  15000,
+  7  SYSDATE
+  8  );
+
+1 row created.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SELECT CustomerID, Name, Balance
+  2  FROM Customers;
+
+CUSTOMERID                                                                      
+----------                                                                      
+NAME                                                                            
+--------------------------------------------------------------------------------
+   BALANCE                                                                      
+----------                                                                      
+         1                                                                      
+Ishan Ghosh                                                                     
+       100                                                                      
+                                                                                
+         2                                                                      
+John James                                                                      
+     22000                                                                      
+
+CUSTOMERID                                                                      
+----------                                                                      
+NAME                                                                            
+--------------------------------------------------------------------------------
+   BALANCE                                                                      
+----------                                                                      
+                                                                                
+         3                                                                      
+Roy Bajaj                                                                       
+     15000                                                                      
+                                                                                
+
+SQL> ALTER TABLE Customers
+  2  ADD IsVIP VARCHAR2(5);
+
+Table altered.
+
+SQL> DESC customers;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMERID                                NOT NULL NUMBER
+ NAME                                               VARCHAR2(100)
+ DOB                                                DATE
+ BALANCE                                            NUMBER
+ LASTMODIFIED                                       DATE
+ ISVIP                                              VARCHAR2(5)
+
+SQL> SET SERVEROUTPUT ON;
+SQL> DECLARE
+  2  BEGIN
+  3  
+  4      FOR cust IN (
+  5          SELECT CustomerID, Balance
+  6          FROM Customers
+  7      )
+  8      LOOP
+  9  
+ 10          IF cust.Balance > 20000 THEN
+ 11  
+ 12              UPDATE Customers
+ 13              SET IsVIP = 'TRUE'
+ 14              WHERE CustomerID = cust.CustomerID;
+ 15  
+ 16          END IF;
+ 17  
+ 18      END LOOP;
+ 19  
+ 20      COMMIT;
+ 21  
+ 22      DBMS_OUTPUT.PUT_LINE('VIP Customers Updated');
+ 23  
+ 24  END;
+ 25  /
+VIP Customers Updated                                                           
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT CustomerID,
+  2         Name,
+  3         Balance,
+  4         IsVIP
+  5  FROM Customers;
+
+CUSTOMERID                                                                      
+----------                                                                      
+NAME                                                                            
+--------------------------------------------------------------------------------
+   BALANCE ISVIP                                                                
+---------- -----                                                                
+         1                                                                      
+Ishan Ghosh                                                                     
+       100                                                                      
+                                                                                
+         2                                                                      
+John James                                                                      
+     22000 TRUE                                                                 
+
+CUSTOMERID                                                                      
+----------                                                                      
+NAME                                                                            
+--------------------------------------------------------------------------------
+   BALANCE ISVIP                                                                
+---------- -----                                                                
+                                                                                
+         3                                                                      
+Roy Bajaj                                                                       
+     15000                                                                      
+                                                                                
+
+SQL> CREATE OR REPLACE FUNCTION CalculateAge(
+  2      p_dob DATE
+  3  )
+  4  RETURN NUMBER
+  5  IS
+  6  BEGIN
+  7      RETURN FLOOR(
+  8          MONTHS_BETWEEN(
+  9              SYSDATE,
+ 10              p_dob
+ 11          ) / 12
+ 12      );
+ 13  END;
+ 14  /
+
+Function created.
+
+SQL> SELECT CalculateAge(
+  2         TO_DATE('2004-11-21','YYYY-MM-DD')
+  3         ) AS AGE
+  4  FROM dual;
+
+       AGE                                                                      
+----------                                                                      
+        21                                                                      
+
+SQL> SELECT CustomerID,
+  2         Name,
+  3         DOB,
+  4         CalculateAge(DOB) AS Age
+  5  FROM Customers;
+
+CUSTOMERID                                                                      
+----------                                                                      
+NAME                                                                            
+--------------------------------------------------------------------------------
+DOB              AGE                                                            
+--------- ----------                                                            
+         1                                                                      
+Ishan Ghosh                                                                     
+21-NOV-04         21                                                            
+                                                                                
+         2                                                                      
+John James                                                                      
+15-DEC-05         20                                                            
+
+CUSTOMERID                                                                      
+----------                                                                      
+NAME                                                                            
+--------------------------------------------------------------------------------
+DOB              AGE                                                            
+--------- ----------                                                            
+                                                                                
+         3                                                                      
+Roy Bajaj                                                                       
+21-OCT-04         21                                                            
+                                                                                
+
+SQL> SELECT table_name
+  2  FROM user_tables;
+
+TABLE_NAME                                                                      
+------------------------------                                                  
+CUSTOMERS                                                                       
+
+SQL> CREATE TABLE Accounts (
+  2      AccountID NUMBER PRIMARY KEY,
+  3      CustomerID NUMBER,
+  4      AccountType VARCHAR2(20),
+  5      Balance NUMBER,
+  6      LastModified DATE
+  7  );
+
+Table created.
+
+SQL> INSERT INTO Accounts
+  2  VALUES(
+  3  1,
+  4  1,
+  5  'SAVINGS',
+  6  5000,
+  7  SYSDATE
+  8  );
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Accounts
+  2  VALUES(
+  3  2,
+  4  2,
+  5  'SAVINGS',
+  6  3000,
+  7  SYSDATE
+  8  );
+
+1 row created.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> SELECT * FROM Accounts;
+
+ ACCOUNTID CUSTOMERID ACCOUNTTYPE             BALANCE LASTMODIF                 
+---------- ---------- -------------------- ---------- ---------                 
+         1          1 SAVINGS                    5000 21-JUN-26                 
+         2          2 SAVINGS                    3000 21-JUN-26                 
+
+SQL> CREATE OR REPLACE PROCEDURE TransferFunds(
+  2      p_source NUMBER,
+  3      p_target NUMBER,
+  4      p_amount NUMBER
+  5  )
+  6  IS
+  7      v_balance NUMBER;
+  8  BEGIN
+  9  
+ 10      SELECT Balance
+ 11      INTO v_balance
+ 12      FROM Accounts
+ 13      WHERE AccountID = p_source;
+ 14  
+ 15      IF v_balance >= p_amount THEN
+ 16  
+ 17          UPDATE Accounts
+ 18          SET Balance = Balance - p_amount
+ 19          WHERE AccountID = p_source;
+ 20  
+ 21          UPDATE Accounts
+ 22          SET Balance = Balance + p_amount
+ 23          WHERE AccountID = p_target;
+ 24  
+ 25          COMMIT;
+ 26  
+ 27          DBMS_OUTPUT.PUT_LINE('Transfer Successful');
+ 28  
+ 29      ELSE
+ 30  
+ 31          DBMS_OUTPUT.PUT_LINE('Insufficient Balance');
+ 32  
+ 33      END IF;
+ 34  
+ 35  END;
+ 36  /
+
+Procedure created.
+
+SQL> EXEC TransferFunds(1,2,1000);
+Transfer Successful                                                             
+
+PL/SQL procedure successfully completed.
+
+SQL> SELECT AccountID,
+  2         Balance
+  3  FROM Accounts;
+
+ ACCOUNTID    BALANCE                                                           
+---------- ----------                                                           
+         1       4000                                                           
+         2       4000                                                           
+
+SQL> EXEC TransferFunds(1,2,10000);
+Insufficient Balance                                                            
+
+PL/SQL procedure successfully completed.
+
+SQL> SPOOL OFF
