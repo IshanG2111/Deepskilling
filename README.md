@@ -34,3 +34,20 @@ Financial forecasting algorithms
 
 ### PLSQL
 Output.txt
+
+# Week 2: Spring Boot Library App
+
+Week 2 includes a small Spring Boot REST app for library management.
+
+## What it has
+- `Book` as a JPA entity
+- `BookRepository` for database access
+- `BookService` for simple business logic
+- `BookController` for REST endpoints
+
+## Main endpoints
+- `GET /api/books`
+- `GET /api/books/{id}`
+- `POST /api/books`
+
+The app uses an in-memory H2 database and starts with sample books already loaded.

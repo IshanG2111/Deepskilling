@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.library</groupId>
-    <artifactId>week-2</artifactId>
+    <artifactId>exercise-9</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

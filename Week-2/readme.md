@@ -1,19 +1,23 @@
 # Week 2
 
-This week has a simple Spring example for setter injection.
+This week now contains a small Spring Boot REST application for library management.
 
 ## What it does
-`BookRepository` returns the book details, `BookService` receives it through Spring, and `LibraryManagementApplication` prints the result.
+`Book` is a JPA entity, `BookRepository` persists it with Spring Data JPA, `BookService` wraps the data access, and `BookController` exposes REST endpoints.
 
 ## Run it
 From the `Week-2` folder, run:
 
 ```powershell
-mvn clean compile exec:java -Dexec.mainClass=com.library.LibraryManagementApplication
+mvn spring-boot:run
 ```
 
-## Output
+## Endpoints
 
 ```text
-Book details: Effective Java by Joshua Bloch
+GET  /api/books
+GET  /api/books/{id}
+POST /api/books
 ```
+
+The application starts with sample books loaded into the in-memory H2 database.
